@@ -1,1 +1,58 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: black;
+      overflow: hidden;
+    }
+    .dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+      animation: moveDots 2s linear infinite;
+    }
+    .text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 36px;
+      font-weight: bold;
+      opacity: 0;
+      animation: textFadeIn 1s linear forwards;
+    }
+    @keyframes moveDots {
+      0% {
+        top: calc(rand() * 100%);
+        left: calc(rand() * 100%);
+      }
+      100% {
+        top: calc(50% - 5px);
+        left: calc(50% - 5px);
+      }
+    }
+    @keyframes textFadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="text">UNITY</div>
+  <script>
+    for (var i = 0; i < 30; i++) {
+      var dot = document.createElement("div");
+      dot.classList.add("dot");
+      document.body.appendChild(dot);
+    }
+  </script>
+</body>
+</html>
