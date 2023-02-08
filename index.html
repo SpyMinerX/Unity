@@ -65,6 +65,12 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const dots = document.querySelectorAll('.circle');
+    
+      for (let i = 0; i < dots.length; i++) {
+    const dot = dots[i];
+    dot.style.top = `${Math.random() * 100}vh`;
+    dot.style.left = `${Math.random() * 100}vw`;
+  }
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
