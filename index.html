@@ -1,113 +1,90 @@
-<!DOCTYPE html>
 <html>
 <head>
   <style>
-    body {
-  background-color: black;
-}
-    .container {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+    .dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background-color: white;
-      animation: moveCircle 10s ease-in-out infinite;
-    }
-
-    @keyframes moveCircle {
-      0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
-
-    .text {
       position: absolute;
+      top: 0;
+      left: 0;
+      animation: drawing 1s ease-in-out forwards;
+    }
+
+    @keyframes drawing {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    #unity {
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      font-size: 48px;
+      color: white;
       opacity: 0;
-      animation: fadeIn 1s ease-in-out forwards;
+      animation: fadein 1s ease-in-out forwards;
     }
 
-    @keyframes fadeIn {
-      0% {
+    @keyframes fadein {
+      from {
         opacity: 0;
       }
-      100% {
+      to {
         opacity: 1;
       }
+    }
+
+    body {
+      background-color: black;
+      height: 1000px;
+      overflow: scroll;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="circle" id="dot1"></div>
-    <!-- repeat the above div 24 more times -->
-    <div class="circle" id="dot25"></div>
-    <canvas id="canvas"></canvas>
-    <div class="text">UNITY</div>
-  </div>
-  
+  <div id="unity">UNITY</div>
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const dots = document.querySelectorAll('.circle');
-    
-      for (let i = 0; i < dots.length; i++) {
-    const dot = dots[i];
-    dot.style.top = `${Math.random() * 100}vh`;
-    dot.style.left = `${Math.random() * 100}vw`;
-  }
+    const dots = [];
+    const unity = document.querySelector("#unity");
+    const unityRect = unity.getBoundingClientRect();
+    const dotCount = 30;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    for (let i = 0; i < dotCount; i++) {
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      document.body.appendChild(dot);
+      dots.push(dot);
+    }
+
+    window.addEventListener("scroll", () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+      for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i];
+        const dotRect = dot.getBoundingClientRect();
+        const xTarget = unityRect.left - dotRect.left + unityRect.width / 2 - dot.offsetWidth / 2;
+        const yTarget = unityRect.top - dotRect.top + unityRect.height / 2 - dot.offsetHeight / 2;
+
+        dot.style.top = `${dotRect.top + yTarget * (scrollTop / 1000)}px`;
+        dot.style.left = `${dotRect.left + xTarget * (scrollTop / 1000)}px`;
+      }
+    });
 
     for (let i = 0; i < dots.length; i++) {
-      for (let j = i + 1; j < dots.length; j++) {
-        const dot1 = dots[i];
-        const dot2 = dots[j];
-        const distance = calculateDistance(dot1, dot2);
+      const dot = dots[i];
+      const x = Math.floor(Math.random() * window.innerWidth);
+      const y = Math.floor(Math.random() * window.innerHeight);
 
-        if (distance < 10) {
-          drawLine(dot1, dot2);
-        }
-      }
+      dot.style.top = `${y}px`;
+      dot.style.left = `${x}px`;
     }
-
-    function calculateDistance(dot1, dot2) {
-      const x1 = dot1.offsetLeft + 5;
-      const y1 = dot1.offsetTop + 5;
-      const x2 = dot2.offsetLeft + 5;
-      const y2 = dot2.offsetTop + 5;
-      const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-      return distance;
-    }
-
-    function drawLine(dot1, dot2) {
-      const x1 = dot1.offsetLeft + 5;
-      const y1 = dot1.offsetTop + 5;
-      const x2 = dot2.offsetLeft + 5;
-      const y2 = dot2.offsetTop + 5;
-      ctx.beginPath();
-      ctx.moveTo(x1,y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    }
-
   </script>
 </body>
 </html>
-
