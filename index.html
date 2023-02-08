@@ -2,40 +2,44 @@
 <html>
 <head>
   <style>
-    body {
-      background-color: black;
-      overflow: hidden;
+    .container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .dot {
+
+    .circle {
       position: absolute;
+      top: 50%;
+      left: 50%;
       width: 10px;
       height: 10px;
-      background-color: white;
       border-radius: 50%;
-      animation: moveDots 2s linear infinite;
+      background-color: white;
+      animation: moveCircle 10s ease-in-out infinite;
     }
+
+    @keyframes moveCircle {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
     .text {
-      position: fixed;
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: white;
-      font-size: 36px;
-      font-weight: bold;
       opacity: 0;
-      animation: textFadeIn 1s linear forwards;
+      animation: fadeIn 1s ease-in-out forwards;
     }
-    @keyframes moveDots {
-      0% {
-        top: calc(rand() * 100%);
-        left: calc(rand() * 100%);
-      }
-      100% {
-        top: calc(50% - 5px);
-        left: calc(50% - 5px);
-      }
-    }
-    @keyframes textFadeIn {
+
+    @keyframes fadeIn {
       0% {
         opacity: 0;
       }
@@ -46,13 +50,55 @@
   </style>
 </head>
 <body>
-  <div class="text">UNITY</div>
+  <div class="container">
+    <div class="circle" id="dot1"></div>
+    <!-- repeat the above div 24 more times -->
+    <div class="circle" id="dot25"></div>
+    <canvas id="canvas"></canvas>
+    <div class="text">UNITY</div>
+  </div>
+  
   <script>
-    for (var i = 0; i < 30; i++) {
-      var dot = document.createElement("div");
-      dot.classList.add("dot");
-      document.body.appendChild(dot);
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const dots = document.querySelectorAll('.circle');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        const dot1 = dots[i];
+        const dot2 = dots[j];
+        const distance = calculateDistance(dot1, dot2);
+
+        if (distance < 10) {
+          drawLine(dot1, dot2);
+        }
+      }
     }
+
+    function calculateDistance(dot1, dot2) {
+      const x1 = dot1.offsetLeft + 5;
+      const y1 = dot1.offsetTop + 5;
+      const x2 = dot2.offsetLeft + 5;
+      const y2 = dot2.offsetTop + 5;
+      const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+      return distance;
+    }
+
+    function drawLine(dot1, dot2) {
+      const x1 = dot1.offsetLeft + 5;
+      const y1 = dot1.offsetTop + 5;
+      const x2 = dot2.offsetLeft + 5;
+      const y2 = dot2.offsetTop + 5;
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
   </script>
 </body>
 </html>
+
