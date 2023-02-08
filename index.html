@@ -6,7 +6,7 @@
       height: 10px;
       border-radius: 50%;
       background-color: white;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       animation: drawing 1s ease-in-out forwards;
@@ -43,7 +43,7 @@
 
     body {
       background-color: black;
-      height: 1000px;
+      height: 2000px;
       overflow: scroll;
     }
   </style>
@@ -54,7 +54,7 @@
     const dots = [];
     const unity = document.querySelector("#unity");
     const unityRect = unity.getBoundingClientRect();
-    const dotCount = 30;
+    const dotCount = 50;
 
     for (let i = 0; i < dotCount; i++) {
       const dot = document.createElement("div");
@@ -72,8 +72,8 @@
         const xTarget = unityRect.left - dotRect.left + unityRect.width / 2 - dot.offsetWidth / 2;
         const yTarget = unityRect.top - dotRect.top + unityRect.height / 2 - dot.offsetHeight / 2;
 
-        dot.style.top = `${dotRect.top + yTarget * (scrollTop / 1000)}px`;
-        dot.style.left = `${dotRect.left + xTarget * (scrollTop / 1000)}px`;
+        dot.style.top = `${dotRect.top + yTarget * (scrollTop / 100000)}px`;
+        dot.style.left = `${dotRect.left + xTarget * (scrollTop / 100000)}px`;
       }
     });
 
