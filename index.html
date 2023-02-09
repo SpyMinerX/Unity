@@ -122,10 +122,10 @@ function draw() {
     circles[i].y += circles[i].dy;
 
     // Bounce dots off the bounding circle
-    if (calculateDistance({x: circles[i].x, y: circles[i].y}, {x: x, y: y}) + dotRadius > boundingRadius) {
-      //const angle = Math.atan2(circles[i].y - y, circles[i].x - x);
-      //circles[i].dx = Math.cos(angle) * 4;
-      //circles[i].dy = Math.sin(angle) * 4;
+    if (calculateDistance({x: x, y: y}, circles[i]) > boundingRadius - dotRadius) {
+      const angle = Math.atan2(circles[i].y - y, circles[i].x - x);
+      circles[i].x = x + Math.cos(angle) * (boundingRadius - dotRadius);
+      circles[i].y = y + Math.sin(angle) * (boundingRadius - dotRadius);
       circles[i].dx = -circles[i].dx;
       circles[i].dy = -circles[i].dy;
     }
