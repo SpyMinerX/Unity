@@ -69,7 +69,7 @@ const dotCount = 30;
 const dotRadius = 5;
 const connectDistance = 80;
 let boundingRadius = Math.max(width, height) / 2;
-let boundingRadius2 = 150;
+let boundingRadius2 = 10;
 const text = document.getElementById("text");
 const x2 = text.offsetLeft + text.offsetWidth/2;
 const y2 = text.offsetTop + text.offsetHeight/2;
@@ -115,6 +115,12 @@ function draw() {
   }
   ctx.beginPath();
   ctx.arc(x, y, boundingRadius, 0, Math.PI * 2, false);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.closePath();
+  ctx.beginPath();
+  ctx.arc(x2, y2, boundingRadius2, 0, Math.PI * 2, false);
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.stroke();
