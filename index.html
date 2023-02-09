@@ -46,45 +46,101 @@
       height: 2000px;
       overflow: scroll;
     }
+    #canvas {
+        background-color: black;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
   </style>
 </head>
 <body>
+  <canvas id="canvas"></canvas>
   <div id="unity">UNITY</div>
   <script>
-    const dots = [];
-    const unity = document.querySelector("#unity");
-    const unityRect = unity.getBoundingClientRect();
-    const dotCount = 50;
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const width = canvas.width = window.innerWidth;
+const height = canvas.height = window.innerHeight;
+const x = width/2;
+const y = height/2;
+let circles = [];
+const dotCount = 30;
+const dotRadius = 5;
+const connectDistance = 80;
+let boundingRadius = Math.max(width, height) / 2;
 
-    for (let i = 0; i < dotCount; i++) {
-      const dot = document.createElement("div");
-      dot.classList.add("dot");
-      document.body.appendChild(dot);
-      dots.push(dot);
-    }
+window.addEventListener('scroll', function() { boundingRadius = (Math.max(width, height) / 2) - (window.scrollY / 2);});
 
-    window.addEventListener("scroll", () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
-      for (let i = 0; i < dots.length; i++) {
-        const dot = dots[i];
-        const dotRect = dot.getBoundingClientRect();
-        const xTarget = unityRect.left - dotRect.left + unityRect.width / 2 - dot.offsetWidth / 2;
-        const yTarget = unityRect.top - dotRect.top + unityRect.height / 2 - dot.offsetHeight / 2;
+// Generate random dots with random x and y positions
+for (let i = 0; i < dotCount; i++) {
+  circles.push({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    dx: ((Math.random() - 0.5) * 4) + 5,
+    dy: ((Math.random() - 0.5) * 4) + 5
+  });
+}
 
-        dot.style.top = `${dotRect.top + yTarget * (scrollTop / 100000)}px`;
-        dot.style.left = `${dotRect.left + xTarget * (scrollTop / 100000)}px`;
+function draw() {
+  ctx.clearRect(0, 0, width, height);
+
+  // Connect dots if they are closer than connectDistance
+  for (let i = 0; i < circles.length; i++) {
+    for (let j = i + 1; j < circles.length; j++) {
+      const distance = calculateDistance(circles[i], circles[j]);
+      if (distance < connectDistance) {
+        ctx.beginPath();
+        ctx.moveTo(circles[i].x, circles[i].y);
+        ctx.lineTo(circles[j].x, circles[j].y);
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
-    });
-
-    for (let i = 0; i < dots.length; i++) {
-      const dot = dots[i];
-      const x = Math.floor(Math.random() * window.innerWidth);
-      const y = Math.floor(Math.random() * window.innerHeight);
-
-      dot.style.top = `${y}px`;
-      dot.style.left = `${x}px`;
     }
+  }
+
+  // Draw dots
+  for (let i = 0; i < circles.length; i++) {
+    ctx.beginPath();
+    ctx.arc(circles[i].x, circles[i].y, dotRadius, 0, Math.PI * 2, false);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.closePath();
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, boundingRadius, 0, Math.PI * 2, false);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.closePath();
+
+// Animate dots
+  for (let i = 0; i < circles.length; i++) {
+    circles[i].x += circles[i].dx;
+    circles[i].y += circles[i].dy;
+
+    // Bounce dots off the bounding circle
+    if (calculateDistance({x: circles[i].x, y: circles[i].y}, {x: x, y: y}) + dotRadius > boundingRadius) {
+      //const angle = Math.atan2(circles[i].y - y, circles[i].x - x);
+      //circles[i].dx = Math.cos(angle) * 4;
+      //circles[i].dy = Math.sin(angle) * 4;
+      circles[i].dx = -circles[i].dx;
+      circles[i].dy = -circles[i].dy;
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+// Calculate distance between two dots
+function calculateDistance(dot1, dot2) {
+  const xDistance = dot1.x - dot2.x;
+  const yDistance = dot1.y - dot2.y;
+  return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+}
+
+draw();
   </script>
 </body>
 </html>
