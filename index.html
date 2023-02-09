@@ -142,8 +142,8 @@ function draw() {
     const distanceFromCenter2 = calculateDistance({x: x, y: y}, circles[i]);
     if (distanceFromCenter2 > boundingRadius2 - dotRadius) {
       const angle = Math.atan2(y2 - circles[i].y, x2 - circles[i].x);
-      circles[i].x = x2 + (boundingRadius2 - dotRadius) * Math.cos(angle);
-      circles[i].y = y2 + (boundingRadius2 - dotRadius) * Math.sin(angle);
+      circles[i].x = x + (boundingRadius2 - dotRadius) * Math.cos(angle);
+      circles[i].y = y + (boundingRadius2 - dotRadius) * Math.sin(angle);
       circles[i].dx = -circles[i].dx;
       circles[i].dy = -circles[i].dy;
   }
