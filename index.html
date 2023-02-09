@@ -58,7 +58,7 @@
   <canvas id="canvas"></canvas>
   <div id="unity">UNITY</div>
   <script>
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("unity");
 const ctx = canvas.getContext("2d");
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
@@ -69,6 +69,10 @@ const dotCount = 30;
 const dotRadius = 5;
 const connectDistance = 80;
 let boundingRadius = Math.max(width, height) / 2;
+let boundingRadius2 = 150;
+const text = document.getElementById("text");
+const x2 = text.offsetLeft + text.offsetWidth/2;
+const y2 = text.offsetTop + text.offsetHeight/2;
 
 window.addEventListener('scroll', function() { boundingRadius = (Math.max(width, height) / 2) - (window.scrollY / 2);});
 
@@ -129,6 +133,13 @@ function draw() {
       circles[i].dx = -circles[i].dx;
       circles[i].dy = -circles[i].dy;
     }
+    const distanceFromCenter2 = calculateDistance({x: x2, y: y2}, circles[i]);
+    if (distanceFromCenter2 > boundingRadius2 - dotRadius) {
+      const angle = Math.atan2(y2 - circles[i].y, x2 - circles[i].x);
+      circles[i].x = x2 + (boundingRadius2 - dotRadius) * Math.cos(angle);
+      circles[i].y = y2 + (boundingRadius2 - dotRadius) * Math.sin(angle);
+      circles[i].dx = -circles[i].dx;
+      circles[i].dy = -circles[i].dy;
   }
 
   requestAnimationFrame(draw);
